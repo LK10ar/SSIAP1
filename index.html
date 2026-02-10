@@ -416,54 +416,43 @@
 
     // --- LOGIQUE VIDÉOTHÈQUE --- 
     const vData = [
-    { 
-        id: 'Eak9JO1zO2U', 
-        title: 'PSC1 : La Position Latérale de Sécurité (PLS)', 
-        cat: 'secours', 
-        iframe: '<iframe src="https://www.youtube.com/embed/Eak9JO1zO2U" frameborder="0" allowfullscreen></iframe>' 
-    },
-    { 
-        id: 'lKta6hI3lx8', 
-        title: 'Le Massage Cardiaque et DAE', 
-        cat: 'secours', 
-        iframe: '<iframe src="https://www.youtube.com/embed/lKta6hI3lx8" frameborder="0" allowfullscreen></iframe>' 
-    },
-    { 
-        id: 'ZgP3W6ylgG4', 
-        title: 'Manoeuvre de Heimlich', 
-        cat: 'secours', 
-        iframe: '<iframe src="https://www.youtube.com/embed/ZgP3W6ylgG4" frameborder="0" allowfullscreen></iframe>' 
-    },
-    { 
-        id: 'kGYA78LHl3E', 
-        title: 'PSC1 : Le Message d\'Alerte (18/112)', 
-        cat: 'secours', 
-        iframe: '<iframe src="https://www.youtube.com/embed/kGYA78LHl3E" frameborder="0" allowfullscreen></iframe>' 
-    },
-    { 
-        id: 'x3nhtQZo6-c', 
-        title: 'Manipulation des Extincteurs', 
-        cat: 'feu', 
-        iframe: '<iframe src="https://www.youtube.com/embed/x3nhtQZo6-c" frameborder="0" allowfullscreen></iframe>' 
-    },
-    { 
-        id: '5zGNUVECY_k', 
-        title: 'Le Robinet d\'Incendie Armé (RIA)', 
-        cat: 'feu', 
-        iframe: '<iframe src="https://www.youtube.com/embed/5zGNUVECY_k" frameborder="0" allowfullscreen></iframe>' 
-    },
-    { 
-        id: '43kHD3M2FxU', 
-        title: 'Système de Sécurité Incendie (SSI)', 
-        cat: 'technique', 
-        iframe: '<iframe src="https://www.youtube.com/embed/43kHD3M2FxU" frameborder="0" allowfullscreen></iframe>' 
-    },
-    { 
-        id: '8cXT42yqZh8', 
-        title: 'Évacuation : Guide-file et Serre-file', 
-        cat: 'technique', 
-        iframe: '<iframe src="https://www.youtube.com/embed/8cXT42yqZh8" frameborder="0" allowfullscreen></iframe>' 
-    }
+    // --- SECOURISME (PSC1 / SST / SECOURS) ---
+    { id: 'Eak9JO1zO2U', title: 'PSC1 : La Position Latérale de Sécurité (PLS)', cat: 'secours', iframe: '<iframe src="https://www.youtube.com/embed/Eak9JO1zO2U" frameborder="0" allowfullscreen></iframe>' },
+    { id: 'lKta6hI3lx8', title: 'Le Massage Cardiaque et DAE', cat: 'secours', iframe: '<iframe src="https://www.youtube.com/embed/lKta6hI3lx8" frameborder="0" allowfullscreen></iframe>' },
+    { id: 'ZgP3W6ylgG4', title: 'Manoeuvre de Heimlich', cat: 'secours', iframe: '<iframe src="https://www.youtube.com/embed/ZgP3W6ylgG4" frameborder="0" allowfullscreen></iframe>' },
+    { id: 'kGYA78LHl3E', title: 'PSC1 : Le Message d\'Alerte (18/112)', cat: 'secours', iframe: '<iframe src="https://www.youtube.com/embed/kGYA78LHl3E" frameborder="0" allowfullscreen></iframe>' },
+    { id: 'YkyQkR1Z4Ug', title: 'Formation Sauveteur Secouriste du Travail (SST)', cat: 'secours', iframe: '<iframe src="https://www.youtube.com/embed/YkyQkR1Z4Ug" frameborder="0" allowfullscreen></iframe>' },
+    { id: 'uKobv-8UD7g', title: 'Appeler les secours ! (Procédure)', cat: 'secours', iframe: '<iframe src="https://www.youtube.com/embed/uKobv-8UD7g" frameborder="0" allowfullscreen></iframe>' },
+
+    // --- FEU & MOYENS D'EXTINCTION ---
+    { id: 'x3nhtQZo6-c', title: 'Manipulation des Extincteurs', cat: 'feu', iframe: '<iframe src="https://www.youtube.com/embed/x3nhtQZo6-c" frameborder="0" allowfullscreen></iframe>' },
+    { id: '5zGNUVECY_k', title: 'Le Robinet d\'Incendie Armé (RIA)', cat: 'feu', iframe: '<iframe src="https://www.youtube.com/embed/5zGNUVECY_k" frameborder="0" allowfullscreen></iframe>' },
+    { id: '9f-EFuC_hxA', title: 'Tout savoir sur les Extincteurs', cat: 'feu', iframe: '<iframe src="https://www.youtube.com/embed/9f-EFuC_hxA" frameborder="0" allowfullscreen></iframe>' },
+    { id: 'SzcR6l7Z8Wo', title: 'Exercices : Moyens d\'Extinction', cat: 'feu', iframe: '<iframe src="https://www.youtube.com/embed/SzcR6l7Z8Wo" frameborder="0" allowfullscreen></iframe>' },
+    { id: 'UEb_zbtnS-w', title: '5 Grandes Causes d\'Incendie', cat: 'feu', iframe: '<iframe src="https://www.youtube.com/embed/UEb_zbtnS-w" frameborder="0" allowfullscreen></iframe>' },
+    { id: 'iXNMnfdkEx4', title: 'Sécurité Incendie : Le Feu (Bases)', cat: 'feu', iframe: '<iframe src="https://www.youtube.com/embed/iXNMnfdkEx4" frameborder="0" allowfullscreen></iframe>' },
+    { id: 'tbGyAwLmr4Y', title: 'Installation Fixe d\'Extinction à Gaz', cat: 'feu', iframe: '<iframe src="https://www.youtube.com/embed/tbGyAwLmr4Y" frameborder="0" allowfullscreen></iframe>' },
+
+    // --- TECHNIQUE & SSI (SSIAP 1, 2, 3) ---
+    { id: '43kHD3M2FxU', title: 'Le SSI de catégorie A (Comprendre en 5 min)', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/43kHD3M2FxU" frameborder="0" allowfullscreen></iframe>' },
+    { id: 'qIhxgeu5pLk', title: 'Exercices SSIAP : Version S.S.I', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/qIhxgeu5pLk" frameborder="0" allowfullscreen></iframe>' },
+    { id: 'z2YnCB6HfJI', title: 'Réarmer + Acquittement Processus SSI', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/z2YnCB6HfJI" frameborder="0" allowfullscreen></iframe>' },
+    { id: 'agE53r6Jll4', title: 'Les Composants du S.S.I', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/agE53r6Jll4" frameborder="0" allowfullscreen></iframe>' },
+    { id: 'VUYSlmC7j-4', title: 'Schéma SSI Catégorie A (Option IGH)', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/VUYSlmC7j-4" frameborder="0" allowfullscreen></iframe>' },
+    { id: '154NTtR9PDI', title: 'Tout savoir sur l\'Éclairage de Sécurité', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/154NTtR9PDI" frameborder="0" allowfullscreen></iframe>' },
+    { id: 'lPaBI-6TQGg', title: 'Résistance au Feu des Éléments de Construction', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/lPaBI-6TQGg" frameborder="0" allowfullscreen></iframe>' },
+    { id: 'G3QYxMGoKHo', title: 'QCM Entraînement SSIAP 3', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/G3QYxMGoKHo" frameborder="0" allowfullscreen></iframe>' },
+
+    // --- MISSIONS & MÉTIER (ÉVACUATION / RONDES / GARDIEANAGE) ---
+    { id: '8cXT42yqZh8', title: 'Évacuation : Le rôle du Serre-File', cat: 'missions', iframe: '<iframe src="https://www.youtube.com/embed/8cXT42yqZh8" frameborder="0" allowfullscreen></iframe>' },
+    { id: 'cjpaGYCP3wY', title: 'Les Principes d\'Évacuation', cat: 'missions', iframe: '<iframe src="https://www.youtube.com/embed/cjpaGYCP3wY" frameborder="0" allowfullscreen></iframe>' },
+    { id: 'ONX70M1zVaM', title: 'La Levée de Doute (Procédure PC)', cat: 'missions', iframe: '<iframe src="https://www.youtube.com/embed/ONX70M1zVaM" frameborder="0" allowfullscreen></iframe>' },
+    { id: 'Lmkwox1t0NY', title: 'Les Rondes de Sécurité', cat: 'missions', iframe: '<iframe src="https://www.youtube.com/embed/Lmkwox1t0NY" frameborder="0" allowfullscreen></iframe>' },
+    { id: 'A_e-vi-jmmE', title: 'Le Métier d\'Agent SSIAP 1', cat: 'missions', iframe: '<iframe src="https://www.youtube.com/embed/A_e-vi-jmmE" frameborder="0" allowfullscreen></iframe>' },
+    { id: '3uqSb5SUk74', title: 'Le Métier d\'Agent SSIAP 2', cat: 'missions', iframe: '<iframe src="https://www.youtube.com/embed/3uqSb5SUk74" frameborder="0" allowfullscreen></iframe>' },
+    { id: 'vBcjdVVFwP8', title: 'Gardiennage : Gestion d\'Intrusion (Réel)', cat: 'missions', iframe: '<iframe src="https://www.youtube.com/embed/vBcjdVVFwP8" frameborder="0" allowfullscreen></iframe>' },
+    { id: 'DeM-fLGLsiI', title: 'Appréhender une personne en sécurité', cat: 'missions', iframe: '<iframe src="https://www.youtube.com/embed/DeM-fLGLsiI" frameborder="0" allowfullscreen></iframe>' },
+    { id: '6cZG92VNavg', title: '5 Bonnes Habitudes en Sécurité', cat: 'missions', iframe: '<iframe src="https://www.youtube.com/embed/6cZG92VNavg" frameborder="0" allowfullscreen></iframe>' }
 ];
 
     function initVideos() { renderVideos(vData); }
