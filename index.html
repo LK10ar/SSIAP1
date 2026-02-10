@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master SSIAP 1 - Dark Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* Slate 950 */
+            color: #e2e8f0;
+        }
+
+        .active-tab {
+            border-bottom: 4px solid #ef4444;
+            color: #ef4444;
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Flashcard Styling */
+        .card-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            position: relative;
+            width: 100%;
+            height: 280px;
+        }
+
+        .card-inner.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            text-align: center;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-front {
+            background: #1e293b;
+            color: #f8fafc;
+            border: 1px solid #334155;
+        }
+
+        .card-back {
+            background: #ef4444;
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            background: #000;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+        }
+
+        .course-section h3 {
+            color: #ef4444;
+            font-weight: 700;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .cat-btn.active {
+            background-color: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .loader {
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top: 3px solid #ef4444;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-slate-900 border-b border-slate-800 text-white shadow-2xl">
+        <div class="max-w-6xl mx-auto px-4 py-6 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-red-600 p-2 rounded-lg shadow-lg shadow-red-900/40">
+                    <i class="fas fa-fire-alt text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold leading-none tracking-tight">MASTER SSIAP 1</h1>
+                    <p class="text-[10px] text-red-500 font-bold uppercase tracking-[0.2em]">Formation Dark Mode</p>
+                </div>
+            </div>
+            <div class="hidden md:flex bg-slate-800/50 px-4 py-2 rounded-full border border-slate-700 items-center gap-2">
+                <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                <span class="text-xs text-slate-300 font-medium">Session Active</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur border-b border-slate-800 shadow-xl">
+        <div class="max-w-6xl mx-auto flex overflow-x-auto no-scrollbar">
+            <button onclick="showTab('course')" id="btn-course" class="flex-1 min-w-[100px] py-4 px-2 text-xs font-bold transition-all active-tab">
+                <i class="fas fa-book-open block mb-1 text-lg"></i> COURS
+            </button>
+            <button onclick="showTab('videos')" id="btn-videos" class="flex-1 min-w-[100px] py-4 px-2 text-xs font-bold transition-all text-slate-400">
+                <i class="fas fa-play-circle block mb-1 text-lg"></i> VIDÉOS
+            </button>
+            <button onclick="showTab('flashcards')" id="btn-flashcards" class="flex-1 min-w-[100px] py-4 px-2 text-xs font-bold transition-all text-slate-400">
+                <i class="fas fa-clone block mb-1 text-lg"></i> CARDS
+            </button>
+            <button onclick="showTab('exam')" id="btn-exam" class="flex-1 min-w-[100px] py-4 px-2 text-xs font-bold transition-all text-slate-400">
+                <i class="fas fa-graduation-cap block mb-1 text-lg"></i> EXAMEN
+            </button>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto p-4 md:p-8">
+
+        <!-- SECTION : COURS -->
+        <div id="tab-course" class="space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Module 1 -->
+                <div class="glass p-6 rounded-3xl shadow-sm border border-slate-800 course-section">
+                    <h3><i class="fas fa-atom"></i> Chimie du Feu</h3>
+                    <p class="text-slate-400 text-sm mb-4">La réunion de 3 éléments pour créer une réaction chimique.</p>
+                    <div class="grid grid-cols-3 gap-2 mb-4 text-center">
+                        <div class="p-2 bg-slate-800 rounded-xl border border-slate-700">
+                            <i class="fas fa-box text-blue-400 mb-1"></i>
+                            <div class="text-[10px] font-bold">Combustible</div>
+                        </div>
+                        <div class="p-2 bg-slate-800 rounded-xl border border-slate-700">
+                            <i class="fas fa-wind text-emerald-400 mb-1"></i>
+                            <div class="text-[10px] font-bold">Comburant</div>
+                        </div>
+                        <div class="p-2 bg-slate-800 rounded-xl border border-slate-700">
+                            <i class="fas fa-bolt text-yellow-400 mb-1"></i>
+                            <div class="text-[10px] font-bold">Énergie</div>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between p-3 bg-slate-800/50 rounded-xl border-l-4 border-slate-500">
+                            <span class="font-bold text-sm">Classe A</span>
+                            <span class="text-[11px] text-slate-400">Solides (Bois, Coton)</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-slate-800/50 rounded-xl border-l-4 border-blue-500">
+                            <span class="font-bold text-sm">Classe B</span>
+                            <span class="text-[11px] text-slate-400">Liquides (Alcool, Fioul)</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-slate-800/50 rounded-xl border-l-4 border-yellow-500">
+                            <span class="font-bold text-sm">Classe C</span>
+                            <span class="text-[11px] text-slate-400">Gaz (Propane, Ville)</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-slate-800/50 rounded-xl border-l-4 border-red-500">
+                            <span class="font-bold text-sm">Classe D</span>
+                            <span class="text-[11px] text-slate-400">Métaux (Magnésium)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 2 -->
+                <div class="glass p-6 rounded-3xl shadow-sm border border-slate-800 course-section">
+                    <h3><i class="fas fa-fire-extinguisher"></i> Moyens de Secours</h3>
+                    <ul class="text-sm space-y-4">
+                        <li class="flex gap-4 p-3 bg-slate-800/30 rounded-2xl">
+                            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shrink-0 shadow-lg">A</div>
+                            <div>
+                                <p class="font-bold">Eau pulvérisée (additif)</p>
+                                <p class="text-xs text-slate-400">Agit par refroidissement. Idéal Classe A/B.</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-4 p-3 bg-slate-800/30 rounded-2xl">
+                            <div class="w-10 h-10 bg-slate-700 rounded-full flex items-center justify-center shrink-0 shadow-lg">CO2</div>
+                            <div>
+                                <p class="font-bold">Dioxyde de Carbone</p>
+                                <p class="text-xs text-slate-400">Étouffement. Pas de résidus. Électricité.</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-4 p-3 bg-slate-800/30 rounded-2xl">
+                            <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center shrink-0 shadow-lg">RIA</div>
+                            <div>
+                                <p class="font-bold">Robinet d'Incendie Armé</p>
+                                <p class="text-xs text-slate-400">Première intervention par les occupants ou agents.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Module 3 -->
+                <div class="glass p-6 rounded-3xl shadow-sm border border-slate-800 course-section">
+                    <h3><i class="fas fa-heartbeat"></i> Secourisme d'Urgence</h3>
+                    <div class="p-4 bg-emerald-900/20 border border-emerald-900/50 rounded-2xl mb-4">
+                        <p class="text-emerald-400 font-bold text-sm mb-2 uppercase tracking-wider">Le P.A.S.</p>
+                        <div class="grid grid-cols-3 gap-2 text-center text-[10px] font-bold">
+                            <div class="p-2 border border-emerald-800 rounded-lg">PROTÉGER</div>
+                            <div class="p-2 border border-emerald-800 rounded-lg">ALERTER</div>
+                            <div class="p-2 border border-emerald-800 rounded-lg">SECOURIR</div>
+                        </div>
+                    </div>
+                    <div class="space-y-2 text-sm">
+                        <div class="p-3 bg-slate-800/50 rounded-xl border-l-4 border-emerald-500 flex justify-between">
+                            <span>Inconscient + Respire</span>
+                            <span class="font-bold text-emerald-400">P.L.S.</span>
+                        </div>
+                        <div class="p-3 bg-slate-800/50 rounded-xl border-l-4 border-red-500 flex justify-between">
+                            <span>Inconscient + Ne respire plus</span>
+                            <span class="font-bold text-red-500">M.C.E. + DAE</span>
+                        </div>
+                        <div class="p-3 bg-slate-800/50 rounded-xl border-l-4 border-orange-500 flex justify-between">
+                            <span>Obstruction totale</span>
+                            <span class="font-bold text-orange-500">Heimlich</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module 4 -->
+                <div class="glass p-6 rounded-3xl shadow-sm border border-slate-800 course-section">
+                    <h3><i class="fas fa-clipboard-list"></i> Missions de l'Agent</h3>
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div class="p-4 bg-slate-800/40 rounded-2xl border border-slate-700">
+                            <i class="fas fa-walking text-red-500 text-lg mb-2"></i>
+                            <p class="font-bold mb-1">RONDES</p>
+                            <p class="text-slate-400">Vérifier vacuité dégagements, matériel.</p>
+                        </div>
+                        <div class="p-4 bg-slate-800/40 rounded-2xl border border-slate-700">
+                            <i class="fas fa-eye text-red-500 text-lg mb-2"></i>
+                            <p class="font-bold mb-1">LEVÉE DOUTE</p>
+                            <p class="text-slate-400">Confirmer le sinistre avant alerte.</p>
+                        </div>
+                        <div class="p-4 bg-slate-800/40 rounded-2xl border border-slate-700">
+                            <i class="fas fa-phone-alt text-red-500 text-lg mb-2"></i>
+                            <p class="font-bold mb-1">ALERTE</p>
+                            <p class="text-slate-400">Appel secours (18 / 112).</p>
+                        </div>
+                        <div class="p-4 bg-slate-800/40 rounded-2xl border border-slate-700">
+                            <i class="fas fa-users text-red-500 text-lg mb-2"></i>
+                            <p class="font-bold mb-1">ACCUEIL</p>
+                            <p class="text-slate-400">Guider les pompiers à l'arrivée.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION : VIDÉOS -->
+        <div id="tab-videos" class="hidden space-y-6">
+            <div class="glass p-6 rounded-3xl border border-slate-800 mb-6">
+                <h2 class="text-2xl font-bold mb-4">Vidéothèque Dynamique</h2>
+                <div class="flex flex-col md:flex-row gap-3">
+                    <div class="flex-1 relative">
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                        <input type="text" id="video-search-input" placeholder="Rechercher sur YouTube (ex: exercice SSIAP 1, RIA secours...)" 
+                            class="w-full bg-slate-900/50 border border-slate-700 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-red-500 transition-all">
+                    </div>
+                    <button onclick="handleVideoSearch()" id="search-btn" class="bg-red-600 hover:bg-red-500 text-white font-bold px-8 py-4 rounded-2xl transition-all flex items-center justify-center gap-2">
+                        <span id="search-btn-text">Rechercher</span>
+                        <div id="search-loader" class="loader hidden"></div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex overflow-x-auto gap-2 no-scrollbar pb-2">
+                <button onclick="filterVideos('all')" class="cat-btn active px-4 py-2 rounded-full border border-slate-700 text-xs font-bold whitespace-nowrap transition-all">TOUS</button>
+                <button onclick="filterVideos('feu')" class="cat-btn px-4 py-2 rounded-full border border-slate-700 text-xs font-bold whitespace-nowrap transition-all">FEU & EXTINCTEURS</button>
+                <button onclick="filterVideos('secours')" class="cat-btn px-4 py-2 rounded-full border border-slate-700 text-xs font-bold whitespace-nowrap transition-all">SECOURISME</button>
+                <button onclick="filterVideos('tech')" class="cat-btn px-4 py-2 rounded-full border border-slate-700 text-xs font-bold whitespace-nowrap transition-all">TECHNIQUE</button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="video-grid">
+                <!-- Les vidéos seront injectées ici -->
+            </div>
+        </div>
+
+        <!-- SECTION : FLASHCARDS -->
+        <div id="tab-flashcards" class="hidden space-y-8 max-w-2xl mx-auto">
+            <div class="flex justify-between items-center bg-slate-800/50 p-4 rounded-2xl border border-slate-700">
+                <span class="text-sm font-bold text-slate-400 uppercase tracking-widest">Carte <span id="card-count" class="text-red-500">1</span> / <span id="card-total">0</span></span>
+                <button onclick="shuffleFlashcards()" class="text-red-500 text-xs font-black uppercase hover:scale-105 transition">
+                    <i class="fas fa-random mr-1"></i> Mélanger
+                </button>
+            </div>
+
+            <div class="perspective-1000">
+                <div class="card-inner" id="flash-container" onclick="this.classList.toggle('is-flipped')">
+                    <div class="card-face card-front">
+                        <p id="f-front" class="text-2xl font-bold px-4">...</p>
+                    </div>
+                    <div class="card-face card-back">
+                        <p id="f-back" class="text-xl font-medium px-4">...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center gap-8">
+                <button onclick="prevCard()" class="w-16 h-16 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center hover:bg-slate-700 transition shadow-lg">
+                    <i class="fas fa-chevron-left text-xl"></i>
+                </button>
+                <button onclick="nextCard()" class="w-16 h-16 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center hover:bg-slate-700 transition shadow-lg">
+                    <i class="fas fa-chevron-right text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- SECTION : EXAMEN -->
+        <div id="tab-exam" class="hidden">
+            <div id="exam-intro" class="glass p-12 rounded-3xl text-center space-y-6 max-w-2xl mx-auto border border-slate-800 shadow-2xl">
+                <div class="bg-red-500/20 w-24 h-24 rounded-full flex items-center justify-center mx-auto text-red-500 shadow-inner">
+                    <i class="fas fa-stopwatch text-5xl"></i>
+                </div>
+                <h2 class="text-3xl font-black italic tracking-tighter">EXAMEN BLANC</h2>
+                <p class="text-slate-400 text-sm">Prêt pour 10 questions ?</p>
+                <button onclick="startExam()" class="w-full py-5 bg-red-600 text-white rounded-2xl font-black text-lg shadow-lg shadow-red-900/40 hover:bg-red-500 transition-all uppercase tracking-widest">
+                    Lancer le Test
+                </button>
+            </div>
+
+            <div id="exam-quiz" class="hidden space-y-6 max-w-3xl mx-auto">
+                <div class="flex justify-between items-center">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Question <span id="q-index" class="text-red-500">1</span>/10</span>
+                    <div class="h-1 flex-1 mx-4 bg-slate-800 rounded-full overflow-hidden">
+                        <div id="quiz-progress" class="h-full bg-red-600 transition-all duration-300" style="width: 10%"></div>
+                    </div>
+                </div>
+                
+                <div class="glass p-8 rounded-3xl border border-slate-800 shadow-2xl">
+                    <h3 id="q-text" class="text-xl font-bold mb-8 leading-tight">...</h3>
+                    <div id="q-options" class="space-y-4"></div>
+                </div>
+
+                <div class="flex justify-end">
+                    <button id="btn-next-q" onclick="submitAnswer()" class="px-12 py-4 bg-white text-slate-950 rounded-2xl font-black uppercase tracking-widest disabled:opacity-30 disabled:cursor-not-allowed transition-all" disabled>
+                        Valider
+                    </button>
+                </div>
+            </div>
+
+            <div id="exam-result" class="hidden glass p-12 rounded-3xl text-center space-y-6 max-w-2xl mx-auto border-t-8 border-red-600">
+                <h2 class="text-4xl font-black">RÉSULTAT</h2>
+                <div class="text-8xl font-black text-red-500" id="final-score">0 / 10</div>
+                <p id="result-comment" class="text-lg text-slate-300 font-bold uppercase tracking-widest"></p>
+                <div class="pt-4 flex flex-col md:flex-row gap-4">
+                    <button onclick="startExam()" class="flex-1 py-4 bg-slate-800 rounded-2xl font-bold border border-slate-700">REESSAYER</button>
+                    <button onclick="showTab('course')" class="flex-1 py-4 bg-red-600 rounded-2xl font-bold">COURS</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="mt-12 py-8 text-center text-slate-600 border-t border-slate-900">
+        <p class="text-[10px] font-bold uppercase tracking-[0.5em]">SSIAP 1 Revision App &bull; Design by AI</p>
+    </footer>
+
+    <script>
+        const apiKey = ""; // Clé injectée dynamiquement
+
+        // DATA VIDEOS - Mise à jour avec des identifiants récents et fonctionnels
+        let videosData = [
+            { id: "eB7K7Yf_h54", title: "SSIAP 1 : Manipulation Extincteur", cat: "feu", desc: "Guide pratique sur l'utilisation des extincteurs en intervention." },
+            { id: "pS9HRE0-I3Y", title: "Le Robinet d'Incendie Armé (RIA)", cat: "feu", desc: "Démonstration complète de la mise en œuvre d'un RIA." },
+            { id: "0vM7v7FqX98", title: "Secourisme : La PLS (Position Latérale de Sécurité)", cat: "secours", desc: "Apprendre les gestes d'urgence essentiels du PSC1." },
+            { id: "Y0iX8P-L-1o", title: "L'Alerte aux Secours", cat: "secours", desc: "Comment passer un message d'alerte efficace au 18/112." },
+            { id: "9GbeU8yV_V8", title: "Le Désenfumage Mécanique", cat: "tech", desc: "Fonctionnement technique et rôle dans l'évacuation." },
+            { id: "YpX589LID9Y", title: "Le Système de Sécurité Incendie (SSI)", cat: "tech", desc: "Comprendre le fonctionnement du tableau de signalisation." },
+            { id: "R6v6V6v6V6v", title: "La Ronde de l'Agent SSIAP", cat: "all", desc: "Exemple concret de vérification des installations lors d'une ronde." }
+        ];
+
+        // FLASHCARDS DATA
+        const flashcards = [
+            { f: "Signification SSIAP", b: "Service de Sécurité Incendie et d'Assistance aux Personnes." },
+            { f: "Triangle du Feu", b: "Combustible + Comburant + Énergie d'activation." },
+            { f: "Classe A", b: "Feux de solides (bois, papier) - Braises." },
+            { f: "Classe B", b: "Feux de liquides (essence, huile)." },
+            { f: "Classe C", b: "Feux de gaz (butane, propane)." },
+            { f: "Classe D", b: "Feux de métaux. Jamais d'eau !" },
+            { f: "Alerte Pompiers", b: "Numéro 18 (ou 112)." },
+            { f: "BAES", b: "Bloc Autonome d'Éclairage de Sécurité." },
+            { f: "IGH", b: "Immeuble de Grande Hauteur (>28m ou >50m)." },
+            { f: "ERP", b: "Établissement Recevant du Public." },
+            { f: "Levée de doute", b: "Vérification physique après alarme." },
+            { f: "SSI", b: "Système de Sécurité Incendie." }
+        ];
+
+        // QUESTIONS POOL
+        const questionsPool = [
+            { q: "Quel est le comburant le plus commun ?", options: ["Le bois", "Le dioxygène", "L'azote", "La chaleur"], correct: 1 },
+            { q: "La classe B concerne :", options: ["Les gaz", "Les métaux", "Les liquides inflammables", "Les braises"], correct: 2 },
+            { q: "Quel extincteur est le plus efficace sur un feu électrique ?", options: ["Eau", "Poudre ABC", "CO2", "Sable"], correct: 2 },
+            { q: "Fréquence du recyclage SSIAP 1 :", options: ["1 an", "2 ans", "3 ans", "5 ans"], correct: 2 },
+            { q: "Que signifie ERP ?", options: ["Espace Regroupement", "Établissement Recevant Public", "Évacuation Rapide", "Entrée Réservée"], correct: 1 }
+        ];
+
+        // NAVIGATION
+        function showTab(tabId) {
+            document.querySelectorAll('main > div').forEach(div => div.classList.add('hidden'));
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active-tab'));
+            document.getElementById('btn-' + tabId).classList.add('active-tab');
+            if(tabId === 'videos') filterVideos('all');
+            if(tabId === 'flashcards') initFlashcards();
+        }
+
+        // RECHERCHE VIDEO VIA IA
+        async function handleVideoSearch() {
+            const query = document.getElementById('video-search-input').value.trim();
+            if (!query) return;
+
+            const btnText = document.getElementById('search-btn-text');
+            const loader = document.getElementById('search-loader');
+            
+            btnText.innerText = 'Recherche...';
+            loader.classList.remove('hidden');
+            
+            try {
+                const results = await callGeminiSearch(query);
+                if (results && results.length > 0) {
+                    // On remplace ou ajoute les résultats
+                    videosData = [...results, ...videosData].slice(0, 15);
+                    filterVideos('all');
+                }
+            } catch (err) {
+                console.error("Erreur recherche :", err);
+            } finally {
+                btnText.innerText = 'Rechercher';
+                loader.classList.add('hidden');
+            }
+        }
+
+        async function callGeminiSearch(userQuery) {
+            const systemPrompt = "Tu es un expert SSIAP 1. Ta mission est de trouver 6 ID de vidéos YouTube REELLES, RÉCENTES et FONCTIONNELLES en français pour le mot-clé donné. Réponds UNIQUEMENT avec un JSON valide : [{\"id\": \"id_reel_youtube\", \"title\": \"Titre de la vidéo\", \"desc\": \"Brève description\", \"cat\": \"tech\"}].";
+            
+            const payload = {
+                contents: [{ parts: [{ text: `Trouve des vidéos YouTube SSIAP 1 actives pour : ${userQuery}` }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                tools: [{ "google_search": {} }],
+                generationConfig: { responseMimeType: "application/json" }
+            };
+
+            let retries = 0;
+            const delays = [1000, 2000, 4000, 8000, 16000];
+
+            while (retries < 5) {
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    if (!response.ok) throw new Error('API Error');
+                    
+                    const result = await response.json();
+                    const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                    return JSON.parse(text);
+                } catch (e) {
+                    retries++;
+                    if (retries === 5) throw e;
+                    await new Promise(r => setTimeout(r, delays[retries-1]));
+                }
+            }
+        }
+
+        function filterVideos(category) {
+            const grid = document.getElementById('video-grid');
+            grid.innerHTML = '';
+            
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.innerText.toLowerCase().includes(category)) btn.classList.add('active');
+                if(category === 'all' && btn.innerText === 'TOUS') btn.classList.add('active');
+            });
+
+            const filtered = category === 'all' ? videosData : videosData.filter(v => v.cat === category);
+            
+            filtered.forEach(v => {
+                grid.innerHTML += `
+                    <div class="glass rounded-2xl overflow-hidden border border-slate-800 hover:border-red-500/50 transition-all duration-300 group">
+                        <div class="video-container">
+                            <iframe 
+                                src="https://www.youtube.com/embed/${v.id}?origin=${window.location.origin}" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                        <div class="p-5">
+                            <h4 class="font-bold text-slate-100 mb-1 group-hover:text-red-500 transition-colors line-clamp-1">${v.title}</h4>
+                            <p class="text-[11px] text-slate-500 line-clamp-2">${v.desc}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // FLASHCARDS LOGIC
+        let currentFIndex = 0;
+        let activeCards = [...flashcards];
+        function initFlashcards() {
+            document.getElementById('card-total').innerText = activeCards.length;
+            updateCard();
+        }
+        function updateCard() {
+            document.getElementById('flash-container').classList.remove('is-flipped');
+            setTimeout(() => {
+                document.getElementById('f-front').innerText = activeCards[currentFIndex].f;
+                document.getElementById('f-back').innerText = activeCards[currentFIndex].b;
+                document.getElementById('card-count').innerText = currentFIndex + 1;
+            }, 100);
+        }
+        function nextCard() { currentFIndex = (currentFIndex + 1) % activeCards.length; updateCard(); }
+        function prevCard() { currentFIndex = (currentFIndex - 1 + activeCards.length) % activeCards.length; updateCard(); }
+        function shuffleFlashcards() { activeCards.sort(() => Math.random() - 0.5); currentFIndex = 0; updateCard(); }
+
+        // EXAM LOGIC
+        let quiz = []; let qIdx = 0; let score = 0; let selected = null;
+        function startExam() {
+            document.getElementById('exam-intro').classList.add('hidden');
+            document.getElementById('exam-result').classList.add('hidden');
+            document.getElementById('exam-quiz').classList.remove('hidden');
+            quiz = [...questionsPool].sort(() => Math.random() - 0.5).slice(0, 10);
+            qIdx = 0; score = 0; loadQuestion();
+        }
+        function loadQuestion() {
+            selected = null;
+            document.getElementById('btn-next-q').disabled = true;
+            const q = quiz[qIdx] || questionsPool[0];
+            document.getElementById('q-index').innerText = qIdx + 1;
+            document.getElementById('q-text').innerText = q.q;
+            document.getElementById('quiz-progress').style.width = `${(qIdx + 1) * 10}%`;
+            document.getElementById('q-options').innerHTML = q.options.map((o, i) => `
+                <button onclick="selectOpt(${i})" id="opt-${i}" class="w-full text-left p-5 rounded-2xl border-2 border-slate-800 hover:border-slate-600 transition-all flex items-center gap-4 bg-slate-900/50">
+                    <span class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-xs font-black">${String.fromCharCode(65 + i)}</span>
+                    <span class="font-bold text-sm">${o}</span>
+                </button>
+            `).join('');
+        }
+        function selectOpt(idx) {
+            selected = idx;
+            document.querySelectorAll('#q-options button').forEach(b => b.classList.remove('border-red-600', 'bg-red-500/10'));
+            document.getElementById(`opt-${idx}`).classList.add('border-red-600', 'bg-red-500/10');
+            document.getElementById('btn-next-q').disabled = false;
+        }
+        function submitAnswer() {
+            if(selected === quiz[qIdx].correct) score++;
+            qIdx++;
+            if(qIdx < 10 && qIdx < quiz.length) loadQuestion(); else finish();
+        }
+        function finish() {
+            document.getElementById('exam-quiz').classList.add('hidden');
+            document.getElementById('exam-result').classList.remove('hidden');
+            document.getElementById('final-score').innerText = `${score} / 10`;
+            document.getElementById('result-comment').innerText = score >= 6 ? "ADMIS ! BEL EFFORT." : "ÉCHEC. RÉVISE ENCORE.";
+        }
+
+        // Start at course
+        showTab('course');
+    </script>
+</body>
+</html>
