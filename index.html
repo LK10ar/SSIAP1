@@ -107,6 +107,18 @@
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
+
+        /* Empêche le blocage du clic sur mobile */
+.no-scrollbar {
+    -webkit-overflow-scrolling: touch; /* Défilement fluide sur iOS */
+}
+
+.cat-btn {
+    position: relative;
+    z-index: 10;
+    pointer-events: auto !important; /* Force la détection du clic */
+    touch-action: manipulation; /* Optimise le clic tactile */
+}
     </style>
 </head>
 <body class="min-h-screen">
@@ -402,7 +414,39 @@
             </div>`;
         });
     }
+function filterCards(cat) {
+    // Gère l'apparence visuelle
+    document.querySelectorAll('#tab-flashcards .cat-btn').forEach(btn => {
+        btn.classList.remove('active', 'bg-red-600');
+    });
+    
+    // On cherche le bouton cliqué de manière plus robuste
+    if (event) {
+        const btn = event.currentTarget;
+        btn.classList.add('active', 'bg-red-600');
+    }
+    
+    renderCards(cat);
+}
+// --- FONCTION MÉLANGER CORRIGÉE ---
+function shuffleCards() {
+    // 1. Mélange aléatoire du tableau cardsPool
+    cardsPool.sort(() => Math.random() - 0.5);
 
+    // 2. Réinitialisation visuelle des boutons de filtre
+    document.querySelectorAll('#tab-flashcards .cat-btn').forEach(btn => {
+        btn.classList.remove('active', 'bg-red-600');
+    });
+
+    // 3. On simule le clic sur le bouton "TOUS" pour rafraîchir la grille
+    const allBtn = document.querySelector('#tab-flashcards button[onclick*="all"]');
+    if (allBtn) {
+        allBtn.classList.add('active', 'bg-red-600');
+    }
+
+    // 4. On relance l'affichage de toutes les cartes mélangées
+    renderCards('all');
+}
     // --- LOGIQUE VIDÉOTHÈQUE ---
     const vData = [
         { id: 'Eak9JO1zO2U', title: 'PSC1 : La Position Latérale de Sécurité (PLS)', cat: 'secours', iframe: '<iframe src="https://www.youtube.com/embed/Eak9JO1zO2U" frameborder="0" allowfullscreen></iframe>' },
