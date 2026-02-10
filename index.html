@@ -292,11 +292,13 @@
                 </div>
 
                 <div class="flex gap-2 mt-4 overflow-x-auto no-scrollbar">
-                    <button onclick="filterVideos('all')" class="cat-btn active px-4 py-2 rounded-full border border-slate-700 text-[10px] font-bold uppercase text-white">Tous</button>
-                    <button onclick="filterVideos('feu')" class="cat-btn px-4 py-2 rounded-full border border-slate-700 text-[10px] font-bold uppercase text-white">Feu & Extincteurs</button>
-                    <button onclick="filterVideos('secours')" class="cat-btn px-4 py-2 rounded-full border border-slate-700 text-[10px] font-bold uppercase text-white">Secourisme</button>
-                    <button onclick="filterVideos('technique')" class="cat-btn px-4 py-2 rounded-full border border-slate-700 text-[10px] font-bold uppercase text-white">Technique</button>
-                </div>
+    <button onclick="filterVideos('all')" class="cat-btn active px-4 py-2 rounded-full border border-slate-700 text-[10px] font-bold uppercase">Tous</button>
+    <button onclick="filterVideos('feu')" class="cat-btn px-4 py-2 rounded-full border border-slate-700 text-[10px] font-bold uppercase">Feu & Extincteurs</button>
+    <button onclick="filterVideos('secours')" class="cat-btn px-4 py-2 rounded-full border border-slate-700 text-[10px] font-bold uppercase">Secourisme</button>
+    <button onclick="filterVideos('technique')" class="cat-btn px-4 py-2 rounded-full border border-slate-700 text-[10px] font-bold uppercase">Technique</button>
+    <button onclick="filterVideos('gardiennage')" class="cat-btn px-4 py-2 rounded-full border border-slate-700 text-[10px] font-bold uppercase">Gardiennage</button>
+    <button onclick="filterVideos('evac')" class="cat-btn px-4 py-2 rounded-full border border-slate-700 text-[10px] font-bold uppercase">Évacuation</button>
+</div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="video-grid">
@@ -342,7 +344,7 @@
         <p class="text-[10px] font-bold uppercase tracking-[0.5em]">SSIAP 1 Revision App • Version Intégrale</p>
     </footer>
 
-    <script>
+   <script>
     // --- NAVIGATION ---
     function showTab(id) {
         document.querySelectorAll('main > div').forEach(d => d.classList.add('hidden'));
@@ -357,13 +359,13 @@
         if (id === 'videos') initVideos();
     }
 
-    // --- LOGIQUE FLASHCARDS (60 CARTES) ---
+    // --- LOGIQUE FLASHCARDS ---
     let cardsPool = [];
     const themes = ['feu', 'secours', 'evac'];
     const cardTitles = {
-        'feu': ['Classe de feu A', 'Extincteur CO2', 'Triangle du feu', 'RIA - Portée', 'Bac à sable'],
-        'secours': ['PLS', 'Massage Cardiaque', 'Heimlich', 'Alerte Pompiers', 'Brûlure thermique'],
-        'evac': ['Point de rassemblement', 'UP (Unité de passage)', 'Plan d\'évacuation', 'Dégagement', 'BAES']
+        'feu': ['Classe de feu A', 'Extincteur CO2', 'Triangle du feu', 'RIA', 'Bac à sable'],
+        'secours': ['PLS', 'Massage Cardiaque', 'Heimlich', 'Alerte Pompiers', 'Brûlure'],
+        'evac': ['Point de rassemblement', 'Unité de passage', 'Plan d\'évacuation', 'Dégagement', 'BAES']
     };
 
     function initCards() {
@@ -395,130 +397,271 @@
                         <i class="fas ${c.icon} theme-icon absolute top-6 right-6 text-slate-700 text-xl"></i>
                         <p class="text-xl font-bold leading-tight italic px-4">${c.q}</p>
                     </div>
-                    <div class="card-face card-back">
-                        <p class="text-sm font-medium leading-relaxed px-4">${c.a}</p>
-                    </div>
+                    <div class="card-face card-back"><p class="text-sm font-medium leading-relaxed px-4">${c.a}</p></div>
                 </div>
             </div>`;
         });
     }
 
-    function filterCards(cat) {
-        document.querySelectorAll('#tab-flashcards .cat-btn').forEach(btn => btn.classList.remove('active', 'bg-red-600'));
-        event.target.classList.add('active', 'bg-red-600');
-        renderCards(cat);
-    }
-
-    function shuffleCards() {
-        cardsPool.sort(() => Math.random() - 0.5);
-        renderCards('all');
-    }
-
-    // --- LOGIQUE VIDÉOTHÈQUE --- 
+    // --- LOGIQUE VIDÉOTHÈQUE ---
     const vData = [
-    // --- SECOURISME (PSC1 / SST / SECOURS) ---
-    { id: 'Eak9JO1zO2U', title: 'PSC1 : La Position Latérale de Sécurité (PLS)', cat: 'secours', iframe: '<iframe src="https://www.youtube.com/embed/Eak9JO1zO2U" frameborder="0" allowfullscreen></iframe>' },
-    { id: 'lKta6hI3lx8', title: 'Le Massage Cardiaque et DAE', cat: 'secours', iframe: '<iframe src="https://www.youtube.com/embed/lKta6hI3lx8" frameborder="0" allowfullscreen></iframe>' },
-    { id: 'ZgP3W6ylgG4', title: 'Manoeuvre de Heimlich', cat: 'secours', iframe: '<iframe src="https://www.youtube.com/embed/ZgP3W6ylgG4" frameborder="0" allowfullscreen></iframe>' },
-    { id: 'kGYA78LHl3E', title: 'PSC1 : Le Message d\'Alerte (18/112)', cat: 'secours', iframe: '<iframe src="https://www.youtube.com/embed/kGYA78LHl3E" frameborder="0" allowfullscreen></iframe>' },
-    { id: 'YkyQkR1Z4Ug', title: 'Formation Sauveteur Secouriste du Travail (SST)', cat: 'secours', iframe: '<iframe src="https://www.youtube.com/embed/YkyQkR1Z4Ug" frameborder="0" allowfullscreen></iframe>' },
-    { id: 'uKobv-8UD7g', title: 'Appeler les secours ! (Procédure)', cat: 'secours', iframe: '<iframe src="https://www.youtube.com/embed/uKobv-8UD7g" frameborder="0" allowfullscreen></iframe>' },
-
-    // --- FEU & MOYENS D'EXTINCTION ---
-    { id: 'x3nhtQZo6-c', title: 'Manipulation des Extincteurs', cat: 'feu', iframe: '<iframe src="https://www.youtube.com/embed/x3nhtQZo6-c" frameborder="0" allowfullscreen></iframe>' },
-    { id: '5zGNUVECY_k', title: 'Le Robinet d\'Incendie Armé (RIA)', cat: 'feu', iframe: '<iframe src="https://www.youtube.com/embed/5zGNUVECY_k" frameborder="0" allowfullscreen></iframe>' },
-    { id: '9f-EFuC_hxA', title: 'Tout savoir sur les Extincteurs', cat: 'feu', iframe: '<iframe src="https://www.youtube.com/embed/9f-EFuC_hxA" frameborder="0" allowfullscreen></iframe>' },
-    { id: 'SzcR6l7Z8Wo', title: 'Exercices : Moyens d\'Extinction', cat: 'feu', iframe: '<iframe src="https://www.youtube.com/embed/SzcR6l7Z8Wo" frameborder="0" allowfullscreen></iframe>' },
-    { id: 'UEb_zbtnS-w', title: '5 Grandes Causes d\'Incendie', cat: 'feu', iframe: '<iframe src="https://www.youtube.com/embed/UEb_zbtnS-w" frameborder="0" allowfullscreen></iframe>' },
-    { id: 'iXNMnfdkEx4', title: 'Sécurité Incendie : Le Feu (Bases)', cat: 'feu', iframe: '<iframe src="https://www.youtube.com/embed/iXNMnfdkEx4" frameborder="0" allowfullscreen></iframe>' },
-    { id: 'tbGyAwLmr4Y', title: 'Installation Fixe d\'Extinction à Gaz', cat: 'feu', iframe: '<iframe src="https://www.youtube.com/embed/tbGyAwLmr4Y" frameborder="0" allowfullscreen></iframe>' },
-
-    // --- TECHNIQUE & SSI (SSIAP 1, 2, 3) ---
-    { id: '43kHD3M2FxU', title: 'Le SSI de catégorie A (Comprendre en 5 min)', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/43kHD3M2FxU" frameborder="0" allowfullscreen></iframe>' },
-    { id: 'qIhxgeu5pLk', title: 'Exercices SSIAP : Version S.S.I', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/qIhxgeu5pLk" frameborder="0" allowfullscreen></iframe>' },
-    { id: 'z2YnCB6HfJI', title: 'Réarmer + Acquittement Processus SSI', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/z2YnCB6HfJI" frameborder="0" allowfullscreen></iframe>' },
-    { id: 'agE53r6Jll4', title: 'Les Composants du S.S.I', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/agE53r6Jll4" frameborder="0" allowfullscreen></iframe>' },
-    { id: 'VUYSlmC7j-4', title: 'Schéma SSI Catégorie A (Option IGH)', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/VUYSlmC7j-4" frameborder="0" allowfullscreen></iframe>' },
-    { id: '154NTtR9PDI', title: 'Tout savoir sur l\'Éclairage de Sécurité', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/154NTtR9PDI" frameborder="0" allowfullscreen></iframe>' },
-    { id: 'lPaBI-6TQGg', title: 'Résistance au Feu des Éléments de Construction', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/lPaBI-6TQGg" frameborder="0" allowfullscreen></iframe>' },
-    { id: 'G3QYxMGoKHo', title: 'QCM Entraînement SSIAP 3', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/G3QYxMGoKHo" frameborder="0" allowfullscreen></iframe>' },
-
-    // --- MISSIONS & MÉTIER (ÉVACUATION / RONDES / GARDIEANAGE) ---
-    { id: '8cXT42yqZh8', title: 'Évacuation : Le rôle du Serre-File', cat: 'missions', iframe: '<iframe src="https://www.youtube.com/embed/8cXT42yqZh8" frameborder="0" allowfullscreen></iframe>' },
-    { id: 'cjpaGYCP3wY', title: 'Les Principes d\'Évacuation', cat: 'missions', iframe: '<iframe src="https://www.youtube.com/embed/cjpaGYCP3wY" frameborder="0" allowfullscreen></iframe>' },
-    { id: 'ONX70M1zVaM', title: 'La Levée de Doute (Procédure PC)', cat: 'missions', iframe: '<iframe src="https://www.youtube.com/embed/ONX70M1zVaM" frameborder="0" allowfullscreen></iframe>' },
-    { id: 'Lmkwox1t0NY', title: 'Les Rondes de Sécurité', cat: 'missions', iframe: '<iframe src="https://www.youtube.com/embed/Lmkwox1t0NY" frameborder="0" allowfullscreen></iframe>' },
-    { id: 'A_e-vi-jmmE', title: 'Le Métier d\'Agent SSIAP 1', cat: 'missions', iframe: '<iframe src="https://www.youtube.com/embed/A_e-vi-jmmE" frameborder="0" allowfullscreen></iframe>' },
-    { id: '3uqSb5SUk74', title: 'Le Métier d\'Agent SSIAP 2', cat: 'missions', iframe: '<iframe src="https://www.youtube.com/embed/3uqSb5SUk74" frameborder="0" allowfullscreen></iframe>' },
-    { id: 'vBcjdVVFwP8', title: 'Gardiennage : Gestion d\'Intrusion (Réel)', cat: 'missions', iframe: '<iframe src="https://www.youtube.com/embed/vBcjdVVFwP8" frameborder="0" allowfullscreen></iframe>' },
-    { id: 'DeM-fLGLsiI', title: 'Appréhender une personne en sécurité', cat: 'missions', iframe: '<iframe src="https://www.youtube.com/embed/DeM-fLGLsiI" frameborder="0" allowfullscreen></iframe>' },
-    { id: '6cZG92VNavg', title: '5 Bonnes Habitudes en Sécurité', cat: 'missions', iframe: '<iframe src="https://www.youtube.com/embed/6cZG92VNavg" frameborder="0" allowfullscreen></iframe>' }
-];
+        { id: 'Eak9JO1zO2U', title: 'PSC1 : La Position Latérale de Sécurité (PLS)', cat: 'secours', iframe: '<iframe src="https://www.youtube.com/embed/Eak9JO1zO2U" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'lKta6hI3lx8', title: 'Le Massage Cardiaque et DAE', cat: 'secours', iframe: '<iframe src="https://www.youtube.com/embed/lKta6hI3lx8" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'ZgP3W6ylgG4', title: 'Manoeuvre de Heimlich', cat: 'secours', iframe: '<iframe src="https://www.youtube.com/embed/ZgP3W6ylgG4" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'kGYA78LHl3E', title: 'PSC1 : Le Message d\'Alerte (18/112)', cat: 'secours', iframe: '<iframe src="https://www.youtube.com/embed/kGYA78LHl3E" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'YkyQkR1Z4Ug', title: 'Formation Sauveteur Secouriste du Travail (SST)', cat: 'secours', iframe: '<iframe src="https://www.youtube.com/embed/YkyQkR1Z4Ug" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'uKobv-8UD7g', title: 'Appeler les secours ! (Procédure)', cat: 'secours', iframe: '<iframe src="https://www.youtube.com/embed/uKobv-8UD7g" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'x3nhtQZo6-c', title: 'Manipulation des Extincteurs', cat: 'feu', iframe: '<iframe src="https://www.youtube.com/embed/x3nhtQZo6-c" frameborder="0" allowfullscreen></iframe>' },
+        { id: '5zGNUVECY_k', title: 'Le Robinet d\'Incendie Armé (RIA)', cat: 'feu', iframe: '<iframe src="https://www.youtube.com/embed/5zGNUVECY_k" frameborder="0" allowfullscreen></iframe>' },
+        { id: '9f-EFuC_hxA', title: 'Tout savoir sur les Extincteurs', cat: 'feu', iframe: '<iframe src="https://www.youtube.com/embed/9f-EFuC_hxA" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'SzcR6l7Z8Wo', title: 'Exercices : Moyens d\'Extinction', cat: 'feu', iframe: '<iframe src="https://www.youtube.com/embed/SzcR6l7Z8Wo" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'UEb_zbtnS-w', title: '5 Grandes Causes d\'Incendie', cat: 'feu', iframe: '<iframe src="https://www.youtube.com/embed/UEb_zbtnS-w" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'iXNMnfdkEx4', title: 'Sécurité Incendie : Le Feu (Bases)', cat: 'feu', iframe: '<iframe src="https://www.youtube.com/embed/iXNMnfdkEx4" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'tbGyAwLmr4Y', title: 'Installation Fixe d\'Extinction à Gaz', cat: 'feu', iframe: '<iframe src="https://www.youtube.com/embed/tbGyAwLmr4Y" frameborder="0" allowfullscreen></iframe>' },
+        { id: '43kHD3M2FxU', title: 'Le SSI de catégorie A (Comprendre en 5 min)', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/43kHD3M2FxU" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'qIhxgeu5pLk', title: 'Exercices SSIAP : Version S.S.I', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/qIhxgeu5pLk" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'z2YnCB6HfJI', title: 'Réarmer + Acquittement Processus SSI', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/z2YnCB6HfJI" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'agE53r6Jll4', title: 'Les Composants du S.S.I', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/agE53r6Jll4" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'VUYSlmC7j-4', title: 'Schéma SSI Catégorie A (Option IGH)', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/VUYSlmC7j-4" frameborder="0" allowfullscreen></iframe>' },
+        { id: '154NTtR9PDI', title: 'Tout savoir sur l\'Éclairage de Sécurité', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/154NTtR9PDI" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'lPaBI-6TQGg', title: 'Résistance au Feu des Éléments de Construction', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/lPaBI-6TQGg" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'G3QYxMGoKHo', title: 'QCM Entraînement SSIAP 3', cat: 'technique', iframe: '<iframe src="https://www.youtube.com/embed/G3QYxMGoKHo" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'vBcjdVVFwP8', title: 'Gardiennage : Gestion d\'Intrusion (Réel)', cat: 'gardiennage', iframe: '<iframe src="https://www.youtube.com/embed/vBcjdVVFwP8" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'DeM-fLGLsiI', title: 'Appréhender une personne en sécurité', cat: 'gardiennage', iframe: '<iframe src="https://www.youtube.com/embed/DeM-fLGLsiI" frameborder="0" allowfullscreen></iframe>' },
+        { id: '6cZG92VNavg', title: '5 Bonnes Habitudes en Sécurité', cat: 'gardiennage', iframe: '<iframe src="https://www.youtube.com/embed/6cZG92VNavg" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'A_e-vi-jmmE', title: 'Le Métier d\'Agent SSIAP 1', cat: 'gardiennage', iframe: '<iframe src="https://www.youtube.com/embed/A_e-vi-jmmE" frameborder="0" allowfullscreen></iframe>' },
+        { id: '3uqSb5SUk74', title: 'Le Métier d\'Agent SSIAP 2', cat: 'gardiennage', iframe: '<iframe src="https://www.youtube.com/embed/3uqSb5SUk74" frameborder="0" allowfullscreen></iframe>' },
+        { id: '8cXT42yqZh8', title: 'Évacuation : Le rôle du Serre-File', cat: 'evac', iframe: '<iframe src="https://www.youtube.com/embed/8cXT42yqZh8" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'cjpaGYCP3wY', title: 'Les Principes d\'Évacuation', cat: 'evac', iframe: '<iframe src="https://www.youtube.com/embed/cjpaGYCP3wY" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'ONX70M1zVaM', title: 'La Levée de Doute (Procédure PC)', cat: 'evac', iframe: '<iframe src="https://www.youtube.com/embed/ONX70M1zVaM" frameborder="0" allowfullscreen></iframe>' },
+        { id: 'Lmkwox1t0NY', title: 'Les Rondes de Sécurité', cat: 'evac', iframe: '<iframe src="https://www.youtube.com/embed/Lmkwox1t0NY" frameborder="0" allowfullscreen></iframe>' }
+    ];
 
     function initVideos() { renderVideos(vData); }
 
     function renderVideos(data) {
         const grid = document.getElementById('video-grid');
         if (!grid) return;
-        grid.innerHTML = data.length === 0 ? '<p class="col-span-full text-center text-slate-500 py-10">Aucun résultat interne.</p>' : 
+        grid.innerHTML = data.length === 0 ? '<p class="col-span-full text-center text-slate-500 py-10">Aucune vidéo trouvée.</p>' : 
         data.map(v => `
-        <div class="glass p-4 rounded-3xl border border-slate-800 group">
-            <div class="video-container">${v.iframe}</div>
-            <div class="p-4">
-                <h4 class="font-bold text-[11px] uppercase group-hover:text-red-500 transition-colors leading-tight text-white">${v.title}</h4>
-                <span class="text-[9px] text-red-500 font-bold uppercase tracking-widest mt-2 block">${v.cat}</span>
-            </div>
-        </div>`).join('');
+            <div class="glass p-4 rounded-3xl border border-slate-800 hover:border-red-500 transition-all group">
+                <div class="video-container">${v.iframe}</div>
+                <div class="p-4">
+                    <h4 class="font-bold text-[11px] uppercase group-hover:text-red-500 text-white">${v.title}</h4>
+                    <span class="text-[9px] text-red-500 font-bold uppercase tracking-widest mt-2 block">${v.cat}</span>
+                </div>
+            </div>`).join('');
     }
 
     function searchVideos() {
         const term = document.getElementById('v-search').value.toLowerCase().trim();
         const filtered = vData.filter(v => v.title.toLowerCase().includes(term) || v.cat.toLowerCase().includes(term));
         renderVideos(filtered);
+        if (term !== "") {
+            const grid = document.getElementById('video-grid');
+            const ytBox = document.createElement('div');
+            ytBox.className = "col-span-full py-10 text-center bg-slate-800/30 rounded-3xl border-2 border-dashed border-slate-700 mt-6";
+            ytBox.innerHTML = `<p class="text-slate-400 text-sm mb-4">Rechercher "${term}" sur YouTube ?</p>
+            <button onclick="launchYoutubeSearch()" class="bg-red-600 hover:bg-red-700 text-white font-black py-4 px-8 rounded-2xl transition-all">LANCER LA RECHERCHE YOUTUBE</button>`;
+            grid.appendChild(ytBox);
+        }
     }
 
     function launchYoutubeSearch() {
         const term = document.getElementById('v-search').value.trim();
-        const query = term === "" ? "formation ssiap 1" : "ssiap 1 " + term;
+        const query = term === "" ? "formation ssiap 1" : "ssiap " + term;
         window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`, '_blank');
     }
 
     function filterVideos(cat) {
         document.querySelectorAll('#tab-videos .cat-btn').forEach(btn => btn.classList.remove('active', 'bg-red-600'));
-        if (event) event.target.classList.add('active', 'bg-red-600');
+        if (event && event.currentTarget) event.currentTarget.classList.add('active', 'bg-red-600');
         renderVideos(cat === 'all' ? vData : vData.filter(v => v.cat === cat));
     }
 
-    // --- LOGIQUE QUIZ ---
-    const pool = [
-        { q: "Quel est le numéro d'alerte des pompiers ?", o: ["15", "17", "18", "112"], c: 2 },
-        { q: "La classe B concerne ?", o: ["Les solides", "Les liquides", "Les gaz", "Les métaux"], c: 1 }
+    // --- BANQUE DE 100 QUESTIONS SSIAP 1 ---
+    const ssiapDatabase = [
+        { q: "Quel est le numéro d'alerte des pompiers ?", o: ["15", "17", "18", "112"], c: 2, e: "Le 18 est le numéro d'appel d'urgence des sapeurs-pompiers." },
+        { q: "La classe de feu B concerne ?", o: ["Solides", "Liquides", "Gaz", "Métaux"], c: 1, e: "La classe B regroupe les feux de liquides ou de solides liquéfiables." },
+        { q: "Que signifie S.S.I. ?", o: ["Système de Sécurité Incendie", "Service de Secours Incendie", "Système de Sauvetage Immédiat"], c: 0, e: "Le SSI collecte les informations, les traite et effectue les fonctions de mise en sécurité." },
+        { q: "Quelle est la distance d'attaque d'un extincteur CO2 ?", o: ["1 m", "3 m", "5 m"], c: 0, e: "Le CO2 sort à -78°C, il faut attaquer le feu de près (environ 1m) pour être efficace." },
+        { q: "Le triangle du feu est composé de : Comburant, Énergie et... ?", o: ["Fumée", "Combustible", "Azote"], c: 1, e: "Sans combustible (bois, papier, gaz...), le feu ne peut exister." },
+        { q: "Quelle est la durée de validité du recyclage SSIAP 1 ?", o: ["1 an", "2 ans", "3 ans"], c: 2, e: "Le recyclage doit être effectué tous les 3 ans." },
+        { q: "Un feu de magnésium appartient à la classe ?", o: ["B", "C", "D"], c: 2, e: "La classe D concerne exclusivement les feux de métaux." },
+        { q: "Que signifie l'acronyme P.A.S. ?", o: ["Passer Alerter Secourir", "Protéger Alerter Secourir", "Prendre Agir Secourir"], c: 1, e: "C'est l'ordre chronologique des gestes de premiers secours." },
+        { q: "Combien d'UP font 1,40m dans un dégagement ?", o: ["1 UP", "2 UP", "3 UP"], c: 1, e: "En ERP, 1 UP = 0.60m et 2 UP = 1.40m." },
+        { q: "Le désenfumage sert principalement à ?", o: ["Éteindre le feu", "Faciliter l'évacuation", "Refroidir les murs"], c: 1, e: "Il permet d'évacuer les fumées toxiques pour permettre la sortie des occupants." },
+        { q: "Quel est l'agent extincteur d'un extincteur à capuchon bleu ?", o: ["Poudre", "Eau", "CO2"], c: 1, e: "La couleur bleue sur la poignée ou l'étiquette désigne l'eau pulvérisée." },
+        { q: "Une porte coupe-feu doit toujours être ?", o: ["Fermée à clé", "Libre de tout obstacle", "Cadenassée"], c: 1, e: "Rien ne doit entraver sa fermeture pour empêcher la propagation des fumées." },
+        { q: "Le déclencheur manuel (DM) envoie l'info au ?", o: ["CMSI", "ECS", "Pompiers"], c: 1, e: "L'information de détection arrive à l'Équipement de Contrôle et de Signalisation (ECS)." },
+        { q: "Que signifie le sigle E.R.P. ?", o: ["Établissement Recevant du Public", "Espace de Réunion Publique"], c: 0, e: "C'est la définition légale d'un bâtiment accueillant des personnes extérieures." },
+        { q: "Combien y a-t-il de catégories d'ERP ?", o: ["3", "5", "7"], c: 1, e: "Il y a 5 catégories, la 5ème étant celle recevant le moins de public." },
+        { q: "Un IGH est un immeuble dont le plancher bas du dernier niveau est à ?", o: ["18m ou 28m", "50m", "100m"], c: 0, e: "28m en général, ou 18m pour l'habitation." },
+        { q: "Le CMSI gère les fonctions de ?", o: ["Détection", "Mise en sécurité", "Rondes"], c: 1, e: "Le Centralisateur de Mise en Sécurité Incendie gère le désenfumage et le compartimentage." },
+        { q: "L'alerte interne est donnée par ?", o: ["Le public", "L'agent SSIAP", "Les pompiers"], c: 1, e: "C'est l'agent qui alerte sa propre structure avant d'appeler les secours extérieurs." },
+        { q: "En cas d'alarme, quel est le délai avant la diffusion du signal ?", o: ["Immédiat", "0 à 5 minutes", "10 minutes"], c: 1, e: "Une temporisation (0-5 min) est réglée selon l'organisation de la levée de doute." },
+        { q: "La ronde de sécurité doit être ?", o: ["Aléatoire", "Fixe", "Optionnelle"], c: 0, e: "Elle doit changer de parcours pour ne pas créer d'habitude dangereuse." },
+        { q: "Quel gaz est le plus toxique lors d'un incendie ?", o: ["Oxygène", "Monoxyde de carbone", "Azote"], c: 1, e: "Le CO est incolore, inodore et mortel à faible dose." },
+        { q: "Quelle est la couleur d'un déclencheur manuel incendie ?", o: ["Vert", "Jaune", "Rouge"], c: 2, e: "Le rouge est la couleur normalisée pour la lutte incendie." },
+        { q: "Que faire en premier lors d'une détection incendie ?", o: ["Appeler les pompiers", "Faire la levée de doute", "Éteindre le SSI"], c: 1, e: "Il faut vérifier physiquement s'il y a un feu réel (levée de doute)." },
+        { q: "Un feu de friteuse se traite avec ?", o: ["De l'eau", "La classe F", "Un ventilateur"], c: 1, e: "La classe F concerne les auxiliaires de cuisson (huiles végétales/animales)." },
+        { q: "La combustion est une réaction ?", o: ["Endothermique", "Exothermique", "Neutre"], c: 1, e: "Elle dégage de la chaleur." },
+        { q: "Que signifie RIA ?", o: ["Réseau Incendie Armé", "Robinet d'Incendie Armé"], c: 1, e: "C'est un moyen de secours manuel alimenté en eau en permanence." },
+        { q: "La portée d'un RIA est de ?", o: ["5 mètres", "15 mètres", "30 mètres"], c: 1, e: "Le jet doit atteindre au moins 15 mètres (en jet droit)." },
+        { q: "Le plan d'évacuation est destiné ?", o: ["Aux pompiers", "Aux occupants", "Au patron"], c: 1, e: "Il aide les occupants à trouver le chemin de sortie le plus proche." },
+        { q: "Un escalier de secours doit être ?", o: ["Éclairé", "Encombré", "Fermé à clé"], c: 0, e: "Il doit rester dégagé et posséder un éclairage de sécurité (BAES)." },
+        { q: "Le point de rassemblement se situe ?", o: ["Dans le hall", "À l'extérieur", "Sur le toit"], c: 1, e: "Il doit être dans une zone sûre à l'extérieur du bâtiment." },
+        { q: "L'agent SSIAP 1 dépend du ?", o: ["Chef d'équipe (SSIAP 2)", "Directeur", "Maire"], c: 0, e: "Le SSIAP 1 est sous les ordres du SSIAP 2." },
+        { q: "Une main courante sert à ?", o: ["Se tenir", "Noter les événements", "Appeler"], c: 1, e: "C'est le registre où sont consignés tous les faits de la vacation." },
+        { q: "Le compartimentage sert à ?", o: ["Éteindre", "Limiter la propagation", "Aérer"], c: 1, e: "Il divise le bâtiment pour enfermer le feu dans une zone." },
+        { q: "Le débit d'un RIA 25 est de ?", o: ["15 l/min", "54 l/min", "100 l/min"], c: 1, e: "Le débit nominal d'un RIA DN25 est d'environ 54 litres par minute." },
+        { q: "Quelle est la couleur d'un déclencheur manuel 'Issue de secours' ?", o: ["Rouge", "Vert", "Bleu"], c: 1, e: "Le vert est utilisé pour le déverrouillage des issues de secours." },
+        { q: "Combien de temps dure la vacation maximum d'un agent ?", o: ["8h", "12h", "24h"], c: 1, e: "La durée maximale de travail effectif pour une vacation de sécurité est de 12h." },
+        { q: "Un feu de forêt est un feu de classe ?", o: ["A", "B", "F"], c: 0, e: "Classe A : Feux de matériaux solides (bois, herbes)." },
+        { q: "L'éclairage de sécurité s'allume en cas de ?", o: ["Fumée", "Coupure de courant secteur", "Nuit"], c: 1, e: "Il prend le relais lors d'une défaillance de l'éclairage normal." },
+        { q: "Que signifie BAES ?", o: ["Bloc Autonome d'Éclairage de Sécurité", "Boîtier d'Alarme et de Secours"], c: 0, e: "Ce sont les blocs lumineux qui indiquent les sorties." },
+        { q: "Quel est le rôle du guide-file ?", o: ["Fermer la marche", "Diriger les gens vers la sortie", "Appeler"], c: 1, e: "Le guide-file mène les occupants vers l'extérieur." },
+        { q: "L'extincteur à eau pulvérisée contient ?", o: ["De l'eau pure", "De l'eau + additif", "De la glace"], c: 1, e: "L'additif permet de briser la tension superficielle de l'eau." },
+        { q: "Un détecteur de fumée est un ?", o: ["DAS", "DAI", "DM"], c: 1, e: "DAI : Détecteur Automatique d'Incendie." },
+        { q: "Le SSI de catégorie A est obligatoire en ?", o: ["Hôpital (Type U)", "Petit magasin", "Parking"], c: 0, e: "Les ERP avec locaux à sommeil (U, J, O) imposent la catégorie A." },
+        { q: "Le triangle du feu est un schéma de ?", o: ["La prévention", "La combustion", "L'évacuation"], c: 1, e: "Il illustre les 3 éléments nécessaires au feu." },
+        { q: "Quelle est la hauteur d'un DM par rapport au sol ?", o: ["0,50m", "1,30m", "2,50m"], c: 1, e: "La commande doit être accessible (entre 0.90m et 1.30m)." },
+        { q: "Le signal sonore d'évacuation est le ?", o: ["Sifflet", "NFS 32-001", "Sirène pompier"], c: 1, e: "C'est la norme du son d'évacuation général." },
+        { q: "Un SSIAP 1 peut-il faire de la maintenance lourde ?", o: ["Oui", "Non", "Seulement le dimanche"], c: 1, e: "Il fait la maintenance de premier niveau (visuelle/simple)." },
+        { q: "Le désenfumage mécanique utilise des ?", o: ["Fenêtres", "Ventilateurs", "Échelles"], c: 1, e: "Il utilise des extracteurs et des insufflateurs moteurs." },
+        { q: "Un feu de gaz est de classe ?", o: ["A", "C", "D"], c: 1, e: "Classe C : Gaz inflammables." },
+        { q: "Que signifie 'M0' en réaction au feu ?", o: ["Combustible", "Incombustible", "Moyen"], c: 1, e: "M0 est le matériau le plus performant (ne brûle pas)." },
+        { q: "Un extincteur doit être contrôlé par un pro tous les ?", o: ["6 mois", "1 an", "5 ans"], c: 1, e: "La vérification technique annuelle est obligatoire." },
+        { q: "Que signifie IGH ?", o: ["Immeuble de Grande Hauteur", "Incendie Grave et Haut"], c: 0, e: "Bâtiment dont la hauteur impose des règles spécifiques." },
+        { q: "Le compartimentage repose sur des ?", o: ["Murs", "Parois et portes CF", "Ventilateurs"], c: 1, e: "Il utilise des parois résistantes au feu." },
+        { q: "En IGH, le désenfumage est ?", o: ["Inutile", "Obligatoire", "Optionnel"], c: 1, e: "Vital pour évacuer les fumées dans les circulations." },
+        { q: "L'alarme générale doit s'entendre ?", o: ["Dans le hall", "Partout dans le bâtiment", "Au PC"], c: 1, e: "Tout le monde doit être prévenu pour évacuer." },
+        { q: "Le SSIAP 1 doit connaître ?", o: ["Le code pénal", "L'emplacement des moyens de secours", "La cuisine"], c: 1, e: "Il doit savoir où se trouvent les extincteurs et RIA de son site." },
+        { q: "Un clapet coupe-feu se trouve dans ?", o: ["Un tuyau d'eau", "Une gaine de ventilation", "Une porte"], c: 1, e: "Il se ferme pour éviter que le feu passe par la ventilation." },
+        { q: "La détection automatique (DAI) déclenche ?", o: ["Le désenfumage", "L'alarme restreinte", "Les pompiers"], c: 1, e: "L'alarme restreinte prévient d'abord le PC sécurité." },
+        { q: "Un agent SSIAP en poste peut-il faire du nettoyage ?", o: ["Oui", "Non", "Si le chef veut"], c: 1, e: "Il doit rester disponible pour ses missions de sécurité." },
+        { q: "Le permis feu est obligatoire pour ?", o: ["Fumer", "Travaux par points chauds", "Cuisiner"], c: 1, e: "Soudure, découpage... tout ce qui génère des étincelles hors zone prévue." },
+        { q: "Quelle est la durée de validité du permis feu ?", o: ["1 jour", "Le temps des travaux", "1 an"], c: 1, e: "Il est délivré pour une tâche et une durée précise." },
+        { q: "En cas de brûlure, on arrose pendant ?", o: ["1 minute", "Le temps que la douleur cesse", "10-15 minutes"], c: 2, e: "La règle des 15 (15 min à 15 cm à 15°C)." },
+        { q: "Une victime qui ne répond pas mais respire est placée en ?", o: ["PLS", "Assise", "Allongée dos"], c: 0, e: "PLS pour éviter l'étouffement par les vomissements ou la langue." },
+        { q: "Le défibrillateur (DAE) sert à ?", o: ["Faire respirer", "Relancer ou régulariser le coeur", "Endormir"], c: 1, e: "Il analyse le rythme et délivre un choc si nécessaire." },
+        { q: "Le massage cardiaque se fait à un rythme de ?", o: ["50/min", "100-120/min", "200/min"], c: 1, e: "Environ 2 compressions par seconde." },
+        { q: "Quelle est la profondeur des compressions thoraciques (adulte) ?", o: ["1 cm", "5 à 6 cm", "10 cm"], c: 1, e: "Il faut comprimer suffisamment pour faire circuler le sang." },
+        { q: "Que signifie ECS ?", o: ["Équipement de Contrôle et de Signalisation", "Écran de Contrôle Sécurité"], c: 0, e: "C'est le cerveau du système de détection." },
+        { q: "L'agent SSIAP 1 vérifie la vacuité des ?", o: ["Cendriers", "Dégagements", "Poches"], c: 1, e: "Rien ne doit bloquer les sorties de secours." },
+        { q: "Le plan d'intervention est destiné aux ?", o: ["Clients", "Pompiers (secours extérieurs)", "Ouvriers"], c: 1, e: "Il aide les pompiers à se repérer dans le bâtiment." },
+        { q: "Une colonne sèche est ?", o: ["Un tuyau vide", "Un tuyau plein d'eau", "Un ascenseur"], c: 0, e: "Tuyau vide que les pompiers remplissent avec leur fourgon." },
+        { q: "Le RIA est utilisable sur ?", o: ["Feux de gaz uniquement", "Début d'incendie classe A", "Feu de métaux"], c: 1, e: "C'est de l'eau, idéal pour les feux de solides (Classe A)." },
+        { q: "Un extincteur CO2 est efficace sur ?", o: ["Bois", "Petits feux électriques", "Herbes"], c: 1, e: "Le CO2 est non conducteur et ne laisse pas de trace." },
+        { q: "Un feu de bois est un feu de classe ?", o: ["A", "B", "D"], c: 0, e: "Classe A : Feux de matériaux solides formant des braises." },
+        { q: "Le SSIAP 1 doit porter ?", o: ["Un jean", "Sa tenue de service", "Un smoking"], c: 1, e: "La tenue permet d'être identifié par le public et les secours." },
+        { q: "Que signifie DAS ?", o: ["Dispositif d'Action de Sécurité", "Dispositif Actionneur de Secours"], c: 0, e: "Exemple : volets de désenfumage, clapets, portes." },
+        { q: "Le point éclair est ?", o: ["Une lampe", "La température minimale d'inflammation", "La fin du feu"], c: 1, e: "Température à laquelle un liquide émet assez de vapeurs pour brûler." },
+        { q: "L'oxygène dans l'air est le ?", o: ["Combustible", "Comburant", "Énergie"], c: 1, e: "Il permet la réaction chimique de combustion." },
+        { q: "Le SSIAP 1 assure ?", o: ["La vente des billets", "La sécurité des personnes et des biens", "Le ménage"], c: 1, e: "Sa mission première est la protection contre l'incendie." },
+        { q: "En ERP, l'évacuation est ?", o: ["Vers le haut", "Vers l'extérieur", "Dans les caves"], c: 1, e: "On évacue toujours vers le domaine public." },
+        { q: "Le code couleur de la catégorie J est ?", o: ["Jaune", "Rose", "Vert"], c: 1, e: "J = Structures d'accueil pour personnes âgées ou handicapées (Rose)." },
+        { q: "Que signifie l'UP ?", o: ["Unité de Passage", "Urgence Prioritaire"], c: 0, e: "Mesure de la largeur des passages d'évacuation." },
+        { q: "Le désenfumage naturel utilise ?", o: ["Des moteurs", "Le tirage thermique", "Des éponges"], c: 1, e: "L'air chaud monte et s'évacue par les trappes." },
+        { q: "La levée de doute doit être ?", o: ["Longue", "Rapide et efficace", "Faite par téléphone"], c: 1, e: "L'agent doit confirmer le sinistre le plus vite possible." },
+        { q: "L'extincteur à poudre est ?", o: ["Polyvalent", "Spécifique bois", "Inutile"], c: 0, e: "La poudre ABC éteint presque tous les types de feux courants." },
+        { q: "Le SSIAP 1 doit savoir utiliser ?", o: ["Un avion", "Un émetteur-récepteur (Radio)", "Une grue"], c: 1, e: "La radio est l'outil de communication principal." },
+        { q: "Le registre de sécurité est ?", o: ["Secret", "Obligatoire", "Optionnel"], c: 1, e: "Il contient l'historique de sécurité du bâtiment." },
+        { q: "Une porte coupe-feu fermée ?", o: ["Bloque les gens", "Bloque les flammes et fumées", "Est inutile"], c: 1, e: "Elle maintient l'intégrité des compartiments." },
+        { q: "La source d'énergie d'un SSI est ?", o: ["Le secteur + batteries", "Une pile", "Le soleil"], c: 0, e: "Le système doit fonctionner même en cas de coupure de courant." },
+        { q: "Le signal NFS 32-001 dure ?", o: ["5 secondes", "Au moins 5 minutes", "1 heure"], c: 1, e: "Le son d'évacuation doit être maintenu pendant toute la sortie." },
+        { q: "Un feu de friteuse s'éteint ?", o: ["Avec de l'eau", "En couvrant ou extincteur F", "En soufflant"], c: 1, e: "L'eau sur de l'huile brûlante provoque une explosion (boil-over)." },
+        { q: "Que signifie DAI ?", o: ["Détecteur Automatique d'Incendie", "Dispositif d'Alarme Interne"], c: 0, e: "Appareil sensible aux fumées, chaleur ou flammes." },
+        { q: "Le SSIAP 1 fait-il l'accueil des secours ?", o: ["Oui", "Non", "Seulement s'il n'y a pas de SSIAP 2"], c: 0, e: "Il guide les pompiers vers le sinistre à leur arrivée." },
+        { q: "Quelle est la couleur du bouton de l'alarme ?", o: ["Jaune", "Rouge", "Vert"], c: 1, e: "Le rouge identifie l'alerte incendie." },
+        { q: "Une évacuation par 'phases' existe en ?", o: ["Petit magasin", "IGH", "Appartement"], c: 1, e: "On évacue souvent compartiment par compartiment." },
+        { q: "Le SMSI signifie ?", o: ["Système de Mise en Sécurité Incendie", "Service de Maintenance Sécurité"], c: 0, e: "C'est la partie qui commande les trappes, portes, etc." },
+        { q: "Peut-on utiliser l'ascenseur en cas d'incendie ?", o: ["Oui", "Non", "Seulement pour descendre"], c: 1, e: "Sauf ascenseurs pompiers spécifiques, risque de blocage ou fumées." },
+        { q: "Que faire si on voit une personne brûler ?", o: ["Courir", "La couvrir / l'étouffer au sol", "Souffler"], c: 1, e: "Il faut empêcher l'oxygène d'alimenter les flammes sur les vêtements." },
+        { q: "Quel est le risque majeur des fumées ?", o: ["La peur", "L'asphyxie et les brûlures internes", "La saleté"], c: 1, e: "Les fumées tuent bien plus que les flammes directes." },
+        { q: "Un agent SSIAP doit être ?", o: ["Sédentaire", "Vigilant", "Distrait"], c: 1, e: "La vigilance constante permet de détecter les anomalies avant le drame." },
+        { q: "Le SSIAP 1 teste les blocs secours ?", o: ["Tous les jours", "Régulièrement lors des rondes", "Jamais"], c: 1, e: "Vérification visuelle de la diode verte." }
     ];
-    let qIdx = 0, score = 0;
+
+    let testQuestions = [];
+    let userAnswers = [];
+    let currentQIdx = 0;
+    let score = 0;
 
     function startQuiz() {
+        // Mélange la base de données et prend 20 questions au hasard
+        testQuestions = [...ssiapDatabase].sort(() => Math.random() - 0.5).slice(0, 20);
+        userAnswers = [];
+        currentQIdx = 0;
+        score = 0;
+        
         document.getElementById('exam-intro').classList.add('hidden');
         document.getElementById('quiz-container').classList.remove('hidden');
-        qIdx = 0; score = 0; loadQuestion();
+        loadQuestion();
     }
 
     function loadQuestion() {
-        const q = pool[qIdx % pool.length];
-        document.getElementById('quiz-progress').innerText = `Question ${qIdx + 1}/10`;
+        const q = testQuestions[currentQIdx];
+        document.getElementById('quiz-progress').innerText = `Question ${currentQIdx + 1}/20`;
         document.getElementById('quiz-q').innerText = q.q;
-        document.getElementById('quiz-opts').innerHTML = q.o.map((o, i) => `
-            <button onclick="check(${i},${q.c})" class="w-full text-left p-5 rounded-2xl border border-slate-700 bg-slate-900/50 hover:border-red-500 font-bold transition-all mt-2">${o}</button>
-        `).join('');
+        
+        const optsContainer = document.getElementById('quiz-opts');
+        optsContainer.innerHTML = '';
+        
+        q.o.forEach((option, index) => {
+            const btn = document.createElement('button');
+            btn.innerText = option;
+            btn.className = "w-full text-left p-5 rounded-2xl border border-slate-700 bg-slate-900/50 hover:border-red-500 font-bold transition-all mt-2";
+            btn.onclick = () => handleAnswer(index);
+            optsContainer.appendChild(btn);
+        });
     }
 
-    function check(i, c) {
-        if (i === c) score++;
-        qIdx++;
-        if (qIdx < 10) loadQuestion();
-        else alert("Test terminé ! Score : " + score + "/10");
+    function handleAnswer(choice) {
+        userAnswers.push(choice);
+        if (choice === testQuestions[currentQIdx].c) score++;
+        
+        currentQIdx++;
+        if (currentQIdx < testQuestions.length) {
+            loadQuestion();
+        } else {
+            showDetailedBilan();
+        }
     }
 
-    // Lancement automatique au chargement
+    function showDetailedBilan() {
+        const container = document.getElementById('quiz-container');
+        let reportHTML = `
+            <div class="text-center mb-10">
+                <h2 class="text-4xl font-black italic">BILAN TERMINÉ</h2>
+                <p class="text-2xl mt-4">Score final : <span class="${score >= 12 ? 'text-emerald-500' : 'text-red-500'}">${score} / 20</span></p>
+                <button onclick="location.reload()" class="mt-6 px-10 py-4 bg-red-600 rounded-2xl font-black uppercase">Refaire un test</button>
+            </div>
+            <div class="space-y-6">
+        `;
+
+        testQuestions.forEach((q, i) => {
+            const isCorrect = userAnswers[i] === q.c;
+            reportHTML += `
+                <div class="p-6 rounded-3xl border ${isCorrect ? 'border-emerald-500/50 bg-emerald-500/5' : 'border-red-500/50 bg-red-500/5'}">
+                    <div class="flex items-center gap-3 mb-2">
+                        <i class="fas ${isCorrect ? 'fa-check-circle text-emerald-500' : 'fa-times-circle text-red-500'}"></i>
+                        <span class="font-bold text-lg">${i+1}. ${q.q}</span>
+                    </div>
+                    <p class="text-sm mb-1 text-slate-400">Votre réponse : <span class="${isCorrect ? 'text-emerald-400' : 'text-red-400'}">${q.o[userAnswers[i]]}</span></p>
+                    ${!isCorrect ? `<p class="text-sm mb-3 text-slate-300">La bonne réponse était : <span class="text-emerald-400 font-bold">${q.o[q.c]}</span></p>` : ''}
+                    <div class="mt-4 p-4 bg-slate-800/50 rounded-xl border border-slate-700">
+                        <p class="text-xs italic text-slate-300 font-medium"><i class="fas fa-info-circle mr-2"></i>Explication : ${q.e}</p>
+                    </div>
+                </div>
+            `;
+        });
+
+        reportHTML += `</div>`;
+        container.innerHTML = reportHTML;
+        container.scrollIntoView({ behavior: 'smooth' });
+    }
+
     window.onload = () => showTab('course');
 </script>
 </body>
