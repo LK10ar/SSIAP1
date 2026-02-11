@@ -482,48 +482,114 @@
     }
 
     // --- LOGIQUE FLASHCARDS ---
-    let cardsPool = [];
-    const themes = ['feu', 'secours', 'evac'];
-    const cardTitles = {
-        'feu': ['Classe de feu A', 'Extincteur CO2', 'Triangle du feu', 'RIA', 'Bac à sable'],
-        'secours': ['PLS', 'Massage Cardiaque', 'Heimlich', 'Alerte Pompiers', 'Brûlure'],
-        'evac': ['Point de rassemblement', 'Unité de passage', 'Plan d\'évacuation', 'Dégagement', 'BAES']
-    };
+let cardsPool = [];
 
-    function initCards() {
-        if (cardsPool.length > 0) return;
-        for (let i = 0; i < 60; i++) {
-            const theme = themes[i % 3];
-            const title = cardTitles[theme][i % 5];
-            cardsPool.push({
-                theme: theme,
-                q: `${title} #${i + 1}`,
-                a: `Réponse technique SSIAP pour ${title}.`,
-                icon: theme === 'feu' ? 'fa-fire' : theme === 'secours' ? 'fa-first-aid' : 'fa-running'
-            });
-        }
-        renderCards('all');
-    }
+const ssiapFlashcardsData = [
+    // THÈME : FEU (20 cartes)
+    { t: 'feu', q: "Quelle est la définition du feu ?", a: "C'est une réaction chimique de combustion exothermique entre un combustible et un comburant." },
+    { t: 'feu', q: "Composition du triangle du feu ?", a: "Combustible (bois, gaz...), Comburant (oxygène) et Énergie d'activation (étincelle, chaleur)." },
+    { t: 'feu', q: "Qu'est-ce qu'un combustible ?", a: "C'est la matière qui brûle (solide, liquide ou gaz)." },
+    { t: 'feu', q: "Qu'est-ce qu'un comburant ?", a: "C'est l'élément qui permet la combustion (généralement l'oxygène de l'air)." },
+    { t: 'feu', q: "Les 4 modes de propagation du feu ?", a: "Conduction, Convection, Rayonnement et Projection." },
+    { t: 'feu', q: "Définition de la classe A ?", a: "Feux de matériaux solides (bois, papier, tissus) formant des braises." },
+    { t: 'feu', q: "Définition de la classe B ?", a: "Feux de liquides ou de solides liquéfiables (essence, alcools, plastiques)." },
+    { t: 'feu', q: "Définition de la classe C ?", a: "Feux de gaz (propane, butane, gaz naturel)." },
+    { t: 'feu', q: "Définition de la classe D ?", a: "Feux de métaux (magnésium, sodium, aluminium)." },
+    { t: 'feu', q: "Définition de la classe F ?", a: "Feux liés aux auxiliaires de cuisson (huiles et graisses végétales ou animales)." },
+    { t: 'feu', q: "Agent extincteur pour classe A ?", a: "Eau pulvérisée (avec ou sans additif) ou poudre ABC." },
+    { t: 'feu', q: "Agent extincteur pour classe B ?", a: "Mousse, poudre BC ou ABC, CO2." },
+    { t: 'feu', q: "Agent extincteur pour classe C ?", a: "Poudre ABC (après coupure de l'arrivée du gaz)." },
+    { t: 'feu', q: "Pourquoi ne pas mettre d'eau sur un feu de classe B ?", a: "Risque de projection et d'extension du foyer (l'essence flotte sur l'eau)." },
+    { t: 'feu', q: "Distance d'attaque d'un extincteur CO2 ?", a: "Environ 1 mètre (risque de brûlure par le froid)." },
+    { t: 'feu', q: "Distance d'attaque d'un extincteur à Eau ?", a: "Environ 2 à 3 mètres." },
+    { t: 'feu', q: "Couleur de l'étiquette CO2 ?", a: "Généralement grise ou inscriptions sur fond gris." },
+    { t: 'feu', q: "Couleur de l'étiquette Eau ?", a: "Bleue." },
+    { t: 'feu', q: "Couleur de l'étiquette Poudre ?", a: "Jaune." },
+    { t: 'feu', q: "Fréquence de vérification d'un extincteur ?", a: "Maintenance visuelle (ronde) et maintenance technique annuelle par un pro." },
 
-    function renderCards(filter) {
-        const grid = document.getElementById('flash-grid');
-        if (!grid) return;
-        grid.innerHTML = '';
-        const filtered = filter === 'all' ? cardsPool : cardsPool.filter(c => c.theme === filter);
-        filtered.forEach(c => {
-            grid.innerHTML += `
-            <div class="perspective-1000">
-                <div class="card-inner" onclick="this.classList.toggle('is-flipped')">
-                    <div class="card-face card-front">
-                        <span class="absolute top-6 left-6 text-[10px] text-red-500 font-black uppercase tracking-widest">${c.theme}</span>
-                        <i class="fas ${c.icon} theme-icon absolute top-6 right-6 text-slate-700 text-xl"></i>
-                        <p class="text-xl font-bold leading-tight italic px-4">${c.q}</p>
-                    </div>
-                    <div class="card-face card-back"><p class="text-sm font-medium leading-relaxed px-4">${c.a}</p></div>
+    // THÈME : SECOURISME (20 cartes)
+    { t: 'secours', q: "Signification de P.A.S. ?", a: "Protéger, Alerter, Secourir." },
+    { t: 'secours', q: "Numéro d'appel des Pompiers ?", a: "18." },
+    { t: 'secours', q: "Numéro d'appel du SAMU ?", a: "15." },
+    { t: 'secours', q: "Numéro d'appel européen ?", a: "112." },
+    { t: 'secours', q: "Que faire face à une victime inconsciente qui respire ?", a: "La mettre en Position Latérale de Sécurité (PLS) et alerter." },
+    { t: 'secours', q: "Signes d'un arrêt cardiaque ?", a: "La victime est inconsciente et ne respire plus (ou 'gasps')." },
+    { t: 'secours', q: "Fréquence du massage cardiaque ?", a: "100 à 120 compressions par minute." },
+    { t: 'secours', q: "Profondeur du massage (adulte) ?", a: "5 à 6 cm." },
+    { t: 'secours', q: "Rapport compressions/insufflations ?", a: "30 compressions pour 2 insufflations." },
+    { t: 'secours', q: "Que signifie DAE ?", a: "Défibrillateur Automatique Externe." },
+    { t: 'secours', q: "Que faire en cas d'obstruction totale des voies aériennes ?", a: "5 claques dans le dos, puis 5 compressions abdominales (Heimlich)." },
+    { t: 'secours', q: "Comment traiter une brûlure thermique simple ?", a: "Arroser immédiatement à l'eau tempérée (15°C) pendant au moins 15 min." },
+    { t: 'secours', q: "Victime qui saigne abondamment ?", a: "Compression directe sur la plaie (gants obligatoires) ou pansement compressif." },
+    { t: 'secours', q: "Signes d'un AVC ?", a: "Paralysie faciale, difficulté à parler, perte de force d'un membre." },
+    { t: 'secours', q: "Quand utiliser un DAE ?", a: "Dès que possible sur une victime en arrêt cardiaque." },
+    { t: 'secours', q: "Position d'une victime en détresse respiratoire ?", a: "Position assise ou demi-assise." },
+    { t: 'secours', q: "Pourquoi mettre en PLS ?", a: "Pour maintenir les voies aériennes libres et éviter l'étouffement par les vomissements." },
+    { t: 'secours', q: "Peut-on masser sur un lit ?", a: "Non, il faut une surface dure (sol) pour que les compressions soient efficaces." },
+    { t: 'secours', q: "Combien de temps masser ?", a: "Jusqu'à l'arrivée des secours ou la reprise d'une respiration normale." },
+    { t: 'secours', q: "Rôle de l'agent SSIAP en secours ?", a: "Il est le premier maillon de la chaîne des secours sur son site." },
+
+    // THÈME : ÉVACUATION / MISSIONS (20 cartes)
+    { t: 'evac', q: "Définition de l'évacuation ?", a: "Mise en sécurité des personnes vers l'extérieur (point de rassemblement)." },
+    { t: 'evac', q: "Rôle du Guide-file ?", a: "Il dirige les personnes vers la sortie la plus proche." },
+    { t: 'evac', q: "Rôle du Serre-file ?", a: "Il vérifie qu'il ne reste personne (WC, bureaux) et ferme les portes." },
+    { t: 'evac', q: "Qu'est-ce qu'un point de rassemblement ?", a: "Zone sécurisée à l'extérieur où l'on effectue le comptage." },
+    { t: 'evac', q: "Signification de BAES ?", a: "Bloc Autonome d'Éclairage de Sécurité." },
+    { t: 'evac', q: "Rôle de l'éclairage d'évacuation ?", a: "Indiquer les sorties et le cheminement en cas de coupure secteur." },
+    { t: 'evac', q: "Fréquence des exercices d'évacuation ?", a: "Tous les 6 mois minimum en ERP." },
+    { t: 'evac', q: "Définition d'un dégagement ?", a: "Toute partie de la construction (couloir, porte, escalier) permettant l'évacuation." },
+    { t: 'evac', q: "Largeur d'une Unité de Passage (1 UP) ?", a: "0,60 mètre." },
+    { t: 'evac', q: "Largeur de 2 UP ?", a: "1,40 mètre." },
+    { t: 'evac', q: "Signification de SSI ?", a: "Système de Sécurité Incendie." },
+    { t: 'evac', q: "Signification de CMSI ?", a: "Centralisateur de Mise en Sécurité Incendie." },
+    { t: 'evac', q: "Rôle du désenfumage ?", a: "Évacuer les fumées, faciliter l'évacuation et l'intervention des secours." },
+    { t: 'evac', q: "Qu'est-ce qu'une porte coupe-feu ?", a: "Porte empêchant la propagation des flammes et fumées d'un compartiment à l'autre." },
+    { t: 'evac', q: "Peut-on encombrer un couloir d'évacuation ?", a: "Jamais. Il doit rester libre de tout obstacle en permanence." },
+    { t: 'evac', q: "Rôle de l'agent lors d'une levée de doute ?", a: "Vérifier physiquement si l'alarme correspond à un feu réel." },
+    { t: 'evac', q: "Signification de DAI ?", a: "Détecteur Automatique d'Incendie." },
+    { t: 'evac', q: "Qu'est-ce que l'alarme générale ?", a: "Signal sonore informant tout le monde qu'il faut évacuer immédiatement." },
+    { t: 'evac', q: "Qu'est-ce que l'alarme restreinte ?", a: "Signal visuel/sonore au PC sécurité indiquant une détection." },
+    { t: 'evac', q: "Signification de IGH ?", a: "Immeuble de Grande Hauteur." }
+];
+
+function initCards() {
+    cardsPool = ssiapFlashcardsData.map((card, index) => ({
+        theme: card.t,
+        q: card.q,
+        a: card.a,
+        id: index + 1,
+        icon: card.t === 'feu' ? 'fa-fire' : card.t === 'secours' ? 'fa-first-aid' : 'fa-running'
+    }));
+    renderCards('all');
+}
+
+function renderCards(filter) {
+    const grid = document.getElementById('flash-grid');
+    const count = document.getElementById('card-count');
+    if (!grid) return;
+    
+    grid.innerHTML = '';
+    const filtered = filter === 'all' ? cardsPool : cardsPool.filter(c => c.theme === filter);
+    
+    if (count) count.innerText = filtered.length;
+
+    filtered.forEach(c => {
+        grid.innerHTML += `
+        <div class="perspective-1000">
+            <div class="card-inner relative w-full h-[280px]" onclick="this.classList.toggle('is-flipped')">
+                <div class="card-face card-front absolute inset-0">
+                    <span class="absolute top-6 left-6 text-[10px] text-red-500 font-black uppercase tracking-widest">${c.theme}</span>
+                    <i class="fas ${c.icon} theme-icon absolute top-6 right-6 text-slate-700 text-xl"></i>
+                    <p class="text-xl font-bold leading-tight italic px-4">${c.q}</p>
                 </div>
-            </div>`;
-        });
-    }
+                <div class="card-face card-back absolute inset-0">
+                    <p class="text-sm font-medium leading-relaxed px-6">${c.a}</p>
+                </div>
+            </div>
+        </div>`;
+    });
+}
+
 function filterCards(cat) {
     // Gère l'apparence visuelle
     document.querySelectorAll('#tab-flashcards .cat-btn').forEach(btn => {
